@@ -1,13 +1,18 @@
 package com.domain.crudapi.services;
 
+import com.domain.crudapi.exceptions.Excep;
 import com.domain.crudapi.model.entities.Product;
 import com.domain.crudapi.model.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.ErrorManager;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -17,23 +22,30 @@ public class ProductService {
     private ProductRepo productRepo;
 
     public Product save(Product product){
-//        if(!product.isPresent())
         return productRepo.save(product);
     }
 
-    public Product edit(Long id){
-        Optional<Product> product = productRepo.findById(id);
-        return product.get();
+    public Product edit(Product productx, Long id){
+        Product product = productRepo.findById(id).orElse(null);
+        String result = "";
 
-//        return null;
+        if (product == null){
+            result = "id " + id + " tidak ditemukan";
+            throw new Excep(result);
+        }
+
+        product.setName(productx.getName());
+        product.setDesc(productx.getDesc());
+        product.setPrice(productx.getPrice());
+        return productRepo.save(product);
     }
-
-    //nambahin edit, delete jika tidak ada dlm database
 
     public Product findOne(Long id){
         Optional<Product> product = productRepo.findById(id);
+        String result = "";
         if(!product.isPresent()){
-            return null;
+            result = "id " + id + " tidak ditemukan";
+            throw new Excep(result);
         }
         return productRepo.findById(id).get();
     }
@@ -43,7 +55,14 @@ public class ProductService {
     }
 
     public void delete(Long id){
-        productRepo.deleteById(id);
+        Product product = productRepo.findById(id).orElse(null);
+        String result = "";
+        if (product == null){
+            result = "id " + id + " tidak ditemukan";
+            throw new Excep(result);
+        } else {
+            productRepo.deleteById(id);
+        }
     }
 
     public List<Product> findByName(String name){

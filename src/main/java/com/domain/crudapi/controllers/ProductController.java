@@ -3,7 +3,6 @@ package com.domain.crudapi.controllers;
 import com.domain.crudapi.model.entities.Product;
 import com.domain.crudapi.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,15 +27,11 @@ public class ProductController {
         return productService.findOne(id);
     }
 
-    @PutMapping
-    public Product update(@RequestBody Product product){
-        return productService.save(product);
-    }
-
 //    @PutMapping("/{id}")
-//    public ResponseEntity<Product> update(@PathVariable("id") Long id){
-//        return productService.edit(id);
-//    }
+    @RequestMapping(value = "/{id}",method=RequestMethod.PUT)
+    public Product update(@PathVariable("id") Long id, @RequestBody Product product){
+       return productService.edit(product, id);
+    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id){
