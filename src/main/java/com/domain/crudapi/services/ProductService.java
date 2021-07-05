@@ -1,22 +1,29 @@
 package com.domain.crudapi.services;
 
+import antlr.StringUtils;
 import com.domain.crudapi.exceptions.Excep;
 import com.domain.crudapi.model.entities.Product;
+import com.domain.crudapi.model.entities.QProduct;
 import com.domain.crudapi.model.repos.ProductRepo;
+import com.querydsl.core.QueryResults;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.ErrorManager;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ProductService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private ProductRepo productRepo;
@@ -67,5 +74,13 @@ public class ProductService {
 
     public List<Product> findByName(String name){
         return productRepo.findByNameContains(name);
+    }
+
+    public List<Product> getProductByQueryDsl(Long id) {
+        QProduct qProduct = QProduct.product;
+        List<Product>query = new JPAQuery<Product>(entityManager).from(qProduct)
+                .where(qProduct.id.eq(id))
+                .fetch();
+        return query;
     }
 }

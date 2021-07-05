@@ -2,8 +2,11 @@ package com.domain.crudapi.controllers;
 
 import com.domain.crudapi.model.entities.Product;
 import com.domain.crudapi.services.ProductService;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -22,9 +25,16 @@ public class ProductController {
         return productService.findAll();
     }
 
+//    crud repository
+//    @GetMapping("/{id}")
+//    public Product findOne(@PathVariable("id") Long id){
+//        return productService.findOne(id);
+//    }
+
+//    query dsl
     @GetMapping("/{id}")
-    public Product findOne(@PathVariable("id") Long id){
-        return productService.findOne(id);
+    public List<Product> getProductByQueryDsl(@PathVariable("id") Long id){
+        return productService.getProductByQueryDsl(id);
     }
 
 //    @PutMapping("/{id}")
