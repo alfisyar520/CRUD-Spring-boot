@@ -1,5 +1,6 @@
 package com.domain.crudapi;
 
+import com.domain.crudapi.controllers.AppController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
