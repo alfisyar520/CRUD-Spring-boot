@@ -2,6 +2,7 @@ package com.domain.crudapi.controllers;
 
 import com.domain.crudapi.model.entities.User;
 import com.domain.crudapi.model.repos.UserRepo;
+import com.domain.crudapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AppController {
 
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
 
     @GetMapping("")
     public String viewHomePage(){
@@ -22,16 +23,13 @@ public class AppController {
 
     @GetMapping("/register")
     public String showRegisterForm(Model model){
-        model.addAttribute("user", new User());
+        userService.addUser(model);
         return "signup_form";
     }
 
     @PostMapping("/process_register")
     public String processRegister(User user){
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        userRepo.save(user);
+        userService.register(user);
         return "register_success";
     }
 
