@@ -33,9 +33,9 @@ public class AppController {
         return "register_success";
     }
 
-    @GetMapping("/list_users")
+    @GetMapping("/list_product")
     public String viewUsersList(){
-        return "users";
+        return "product";
     }
 }
 //https://www.codejava.net/frameworks/spring-boot/user-registration-and-login-tutorial
